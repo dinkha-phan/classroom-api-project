@@ -15,7 +15,7 @@ Class
 User
 -> StudentID - MSSV? Giáo viên và học sinh đều có MSSV -> (username)
 -> Name
--> Avartar
+-> AvartarURL
 -> Email 
 -> Password
 
