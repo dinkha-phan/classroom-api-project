@@ -1,14 +1,9 @@
 const db = require('../../utils/db');
 module.exports = {
-    async allClass(){
-        let row = await db('class');
-        return row;
-    },
-    async createClass(infor){
-        await db('class').insert(infor);
-    },
-    async findUserByUsername(usn){
-        let row = await db('user').where('Username', usn);
+    async findUserByMail(usn){
+        let row = await db('user').where('Email', usn);
+        if (row.length === 0)
+          return null;
         return row;
     },
     async addUser(user){

@@ -7,8 +7,7 @@ const UserModel = require("../../components/user/user.model")
  passport.use(new LocalStrategy({session:false},
     async function(username, password, done){
         console.log(password);
-        const user = await UserModel.findUserByUsername(username);
-        console.log(user);
+        const user = await UserModel.findUserByMail(username);
         if (!user) {
             return done(null, false, { message: 'Incorrect username.' });
         }
@@ -16,7 +15,7 @@ const UserModel = require("../../components/user/user.model")
         if (ret === false) {
             return done(null, false, { message: 'Incorrect password.' });
         }
-        return done(null, {id: user[0].UserID, username: user[0].Username})
+        return done(null, {id: user[0].UserID, email: user[0].Email})
 
     }    
     
