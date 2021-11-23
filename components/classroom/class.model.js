@@ -1,11 +1,46 @@
 const db = require('../../utils/db');
 module.exports = {
-    async allClass(){
-        let row = await db('class');
-        console.log(row);
+    async getAllClasses() {
+        const rows = await db.select('*').from('class');
+        //console.log(rows, typeof (rows));
+        return rows;
+    },
+
+    async getClassByID(id) {
+        const row = await db.from('class').where({
+            'ClassID': id
+        }).select('*')
+
+        //console.log(row, typeof (row));
         return row;
     },
-    async createClass(infor){
-        await db('class').insert(infor);
+
+
+    async getClassByCode(classCode) {
+        const row = await db.from('class').where({
+            'Code': classCode
+        }).select('*')
+
+        //console.log(row, typeof (row));
+        return row;
+    },
+
+
+
+
+    async createClass(data) {
+        await db('class').insert(data);
+    },
+
+    async updateClassByID(id, data) {
+        const rs = await db('class').where('ClassID', '=', id).update(data, ['classID']);
+        //console.log(rs);
+        return rs == 1 ? true : false;
+    },
+
+    async deleteClassByID(id) {
+        const rs = await db('class').where('ClassID', '=', id).del(['classID'], { includeTriggerModifications: true })
+        //console.log(rs);
+        return rs == 1 ? true : false;
     }
 }

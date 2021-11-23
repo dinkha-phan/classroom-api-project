@@ -7,7 +7,7 @@ const logger = require('morgan');
 const cors = require('cors')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./components/user/user.controller');
-const classRouter = require('./components/classroom/index');
+const classRouter = require('./components/classroom/class.controller');
 const signUpRouter = require('./module/passport/signup.route');
 const loginRouter = require('./module/passport/login.route');
 const passport = require('passport');
@@ -24,8 +24,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/user', usersRouter);
-app.use('/class', classRouter);
+app.use('/users', usersRouter);
+app.use('/classes', classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
 
