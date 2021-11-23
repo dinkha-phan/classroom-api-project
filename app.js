@@ -10,7 +10,8 @@ const usersRouter = require('./components/user/user.controller');
 const classRouter = require('./components/classroom/class.controller');
 const signUpRouter = require('./module/passport/signup.route');
 const loginRouter = require('./module/passport/login.route');
-const passport = require('passport');
+const rTokenRouter = require('./module/auth.route');
+const passport = require('./module/passport/index');
 const app = express();
 app.use(passport.initialize());
 // view engine setup
@@ -24,10 +25,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', passport.authenticate('jwt', {session:false}), usersRouter);
 app.use('/classes', classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
+app.use('/refresh', rTokenRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
