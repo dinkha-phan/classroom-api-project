@@ -4,18 +4,31 @@ const bcrypt = require('bcryptjs')
 const route = express.Router();
 const passport = require('./index');
 const userModel = require('../../components/user/user.model');
+const { v4: uuidv4 } = require("uuid");
+const refreshToken =require('../model/refreshToken.model');
 var userProfile;
-route.post('/', passport.authenticate('local',  {session:false}), function(req, res, next){
+route.post('/', passport.authenticate('local',  {session:false}), async function(req, res, next){
     console.log(req.user);
-      res.json({
-          user: req.user,
-          token: jwt.sign({
-              email: req.user.email,
-              id:req.user.id,
-          }, process.env.JWT_SECRET, {
-              expiresIn: '1h'
-          })
-      })
+    let _rToken = uuidv4();
+    let day = new Date();
+    day.setTime(day.getTime() + 60480000)
+    const token ={
+        Email: req.user.email,
+        Token: _rToken,
+        ExpiredDate: day,
+    }
+    await refreshToken.addToken(token);
+    res.json({
+        user: req.user,
+        token: jwt.sign({
+            email: req.user.email,
+            id:req.user.id,
+            spec: uuidv4(),
+        }, process.env.JWT_SECRET, {
+            expiresIn: '5m'
+        }),
+        refreshToken: _rToken,
+    })
 })
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
   

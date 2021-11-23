@@ -4,6 +4,7 @@ const JwtStrategy = require("passport-jwt").Strategy,
  ExtractJWT = require("passport-jwt").ExtractJwt;
  const bcrypt = require('bcryptjs');
 const UserModel = require("../../components/user/user.model") 
+
  passport.use(new LocalStrategy({session:false},
     async function(username, password, done){
         console.log(password);
@@ -24,6 +25,6 @@ const opts ={}
 opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
 opts.secretOrKey =process.env.JWT_SECRET;
 passport.use(new JwtStrategy(opts, function(jwt_payload, done){
-    return done(null, {id: jwt_payload.id, username: jwt_payload.username})
+    return done(null, {id: jwt_payload.id, email: jwt_payload.email})
 }))
 module.exports  =passport;
