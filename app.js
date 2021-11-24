@@ -10,6 +10,7 @@ const usersRouter = require('./components/user/user.controller');
 const classRouter = require('./components/classroom/class.controller');
 const signUpRouter = require('./module/passport/signup.route');
 const loginRouter = require('./module/passport/login.route');
+const sendMailRoute = require('./components/sendmail/sendmail.controller');
 const rTokenRouter = require('./module/auth.route');
 const passport = require('./module/passport/index');
 const app = express();
@@ -30,6 +31,7 @@ app.use('/classes', classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
 app.use('/refresh', rTokenRouter);
+app.use('/invite', sendMailRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
