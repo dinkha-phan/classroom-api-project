@@ -1,6 +1,8 @@
 const classService = require('../classroom/class.service')
 const userModel = require('../user/user.model')
 const joinClassModel = require('./joinClass.model')
+const nodemailer = require('nodemailer');
+const { getMailContent } = require('./mailContent');
 
 module.exports = {
     async addStudentIntoClass(email, classID) {
@@ -65,13 +67,15 @@ module.exports = {
         return returnJson;
     },
 
+
+
     async addInvitation(email, classID, role) {
+        console.log(email, classID, role);
         let returnJson = {
             msg: 'failure',
             error: 'Something was wrong!',
         }
 
-        console.log(email, classID, role);
 
         // check class is exists
         // check class is exists
@@ -85,20 +89,22 @@ module.exports = {
         // check user is not exists
         const userData = await userModel.getUserByEmail(email);
         // console.log(userData);
-        if (!userData || userData.length === 0) {
-            returnJson.error = "User is not exists!";
-            return returnJson;
-        }
-        const userID = userData[0].UserID;
+        // if (!userData || userData.length === 0) {
+        //     returnJson.error = "User is not exists!";
+        //     return returnJson;
+        // }
 
 
         // check user is in class
-        const classesOfUser = await userModel.getClassesOfUserByUserID(userID);
-        // console.log(classesOfUser);
-        for (let i in classesOfUser) {
-            if (classesOfUser[i].ClassID === classID) {
-                returnJson.error = "User joined this class!";
-                return returnJson;
+        if (userData) {
+            const userID = userData[0].UserID;
+            const classesOfUser = await userModel.getClassesOfUserByUserID(userID);
+            // console.log(classesOfUser);
+            for (let i in classesOfUser) {
+                if (classesOfUser[i].ClassID === classID) {
+                    returnJson.error = "User joined this class!";
+                    return returnJson;
+                }
             }
         }
 
@@ -110,6 +116,9 @@ module.exports = {
             returnJson.error = "User is invited!";
             return returnJson;
         }
+        
+        // send mail 
+        sendmail(classInfo[0].LinkToJoinClass, email);
 
         // add invitation
         const handleData = {
@@ -126,6 +135,31 @@ module.exports = {
         return returnJson;
 
     }
+}
 
 
+function sendmail(link, email) {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: 'ntd.ppnckh.01@gmail.com',			//email ID
+            pass: 'Tdat01217181090'				//Password 
+        }
+    });
+
+    const details = getMailContent(link, email);
+    // console.log(link, email);
+    // console.log(details);
+
+    transporter.sendMail(details, function (error, data) {
+        if (error) {
+            console.log(error)
+        }
+        else {
+            // console.log(data);
+            console.log('Send mail successfully');
+        }
+    });
 }

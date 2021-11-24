@@ -135,7 +135,7 @@ module.exports = router;
 // resource note
 
 // users <-----------------------------------------------------
-
+// REST API
 // urlAPI/users/        -> list (GET)
 // urlAPI/users/:id     -> get user by id (GET)
 // urlAPI/users/        -> add user (POST)

@@ -1,5 +1,4 @@
 const db = require('../../utils/db');
-const { addInvitation } = require('./joinClass.service');
 module.exports = {
     async getInvatationByEmailandClassID(email, classID) {
         return await db('invitation').select('*').where('Email', '=', email).andWhere('ClassID', '=', classID);

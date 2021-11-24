@@ -55,10 +55,11 @@ module.exports = {
     },
 
     async getClassesOfUserByUserIDandRole(userID, role) {
-        const row = await db.select(['c.*', 'cu.*'])
+        const row = await db.select(['c.*', 'cu.*', 'u2.FullName as AuthorName'])
             .from('user as u')
             .join('class_user as cu', 'u.UserID ', '=', ' cu.UserID')
             .join('class as c', 'c.ClassID', '=', ' cu.ClassID')
+            .join('user as u2', 'c.Auther', '=', ' u2.UserID')
             .where('u.UserID', '=', userID)
             .andWhere('cu.Role', '=', role)
         // console.log(row);

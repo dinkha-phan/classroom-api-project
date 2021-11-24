@@ -27,10 +27,4 @@ router.post('/confirm/:classID/', async (req, res, next) => {
     res.json(rs);
 })
 
-
-
-
-
-
-
 module.exports = router;

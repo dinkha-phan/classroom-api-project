@@ -46,9 +46,9 @@ module.exports = {
     
     async getAllPeopleInClass(classID) {
         const rs = await db.select('*')
-        .from('user as u')
-        .join('class_user as cu', 'u.UserID', '=', 'cu.UserID')
-        .where('ClassID', '=', classID);
+        .from('class_user as cu')
+        .join('user as u', 'u.UserID', '=', 'cu.UserID')
+        .where('cu.ClassID', '=', classID);
         // console.log(rs);
         return rs;
     },
