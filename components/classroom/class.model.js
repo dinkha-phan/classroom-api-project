@@ -42,5 +42,15 @@ module.exports = {
         const rs = await db('class').where('ClassID', '=', id).del(['classID'], { includeTriggerModifications: true })
         //console.log(rs);
         return rs == 1 ? true : false;
-    }
+    },
+    
+    async getAllPeopleInClass(classID) {
+        const rs = await db.select('*')
+        .from('user as u')
+        .join('class_user as cu', 'u.UserID', '=', 'cu.UserID')
+        .where('ClassID', '=', classID);
+        // console.log(rs);
+        return rs;
+    },
+    
 }

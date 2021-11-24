@@ -40,6 +40,12 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 
+router.get('/:classID/class-user/', async (req, res, next) => {
+    const classID = req.params.classID;
+    const rs = await classService.getAllPeopleInClass(classID);
+    res.json(rs);
+})
+
 
 
 module.exports = router;

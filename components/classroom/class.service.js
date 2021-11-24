@@ -33,19 +33,29 @@ module.exports = {
             Name: data.name,
             Part: data.part,
             Title: data.title,
-            Room: data.room
+            Room: data.room,
+            Auther: data.userID,
         }
         classData.ClassID = uuidv4();
-        classData.LinkToJoinClass = 'https://classroom-project/joinClass/' + classData.ClassID;
+        classData.LinkToJoinClass = process.env.URL_LOCAL_API + '/joinClass/' + classData.ClassID;
         classData.Code = uuidv4();
 
         console.log(classData)
         await classModel.createClass(classData);
 
-        return classData.ClassID;
+        let returnJson = {
+            msg: 'success',
+            error: '',
+            classID: classData.ClassID
+        }
+        return returnJson;
     },
 
     async updateClassByID(id, data) {
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        }
         if (uuidValidate(id)) {
             const classData = {
                 Name: data.name,
@@ -53,16 +63,37 @@ module.exports = {
                 Title: data.title,
                 Room: data.room
             }
-            return await classModel.updateClassByID(id, classData);
+            if (await classModel.updateClassByID(id, classData)) {
+                returnJson.error = '';
+                returnJson.msg = 'success';
+            }
         }
-        return false;
+        return returnJson;
     },
 
     async deleteClassByID(id) {
-        if (uuidValidate(id)) {
-            return await classModel.deleteClassByID(id);
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!'
         }
-        return false;
-    }
+        if (uuidValidate(id)) {
+            if (await classModel.deleteClassByID(id)) {
+                returnJson.error = '';
+                returnJson.msg = 'success';
+            }
+        }
+        return returnJson;
+    },
+
+    async getAllPeopleInClass(classID) {
+        if (uuidValidate(classID)) {
+            console.log(classID);
+            return await classModel.getAllPeopleInClass(classID);
+        }
+        return {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        };
+    },
 
 }

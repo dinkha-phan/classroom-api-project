@@ -33,8 +33,8 @@ router.get('/:id', async function (req, res, next) {
 
 /* Add user*/
 router.post('/', async (req, res, next) => {
-    await userService.createUser(req.body);
-    res.json('success');
+    const rs = await userService.createUser(req.body);
+    res.json(rs);
 });
 
 /* Update user by ID */
@@ -105,7 +105,7 @@ router.post('/:userID/class-user', async (req, res, next) => {
         }
     }
 
-    res.json({ error: "Something was wrong!" })
+    res.json({ msg: 'failure', error: "Something was wrong!" })
 })
 
 router.put('/:userID/class-user/:classID', async (req, res, next) => {
@@ -118,7 +118,7 @@ router.put('/:userID/class-user/:classID', async (req, res, next) => {
 
     const result = await userService.updateInfoClassOfUser(userID, classID, rawData);
 
-    res.status(200).json(result);
+    res.json(result);
 })
 
 router.delete('/:userID/class-user/:classID', async (req, res, next) => {
@@ -128,9 +128,6 @@ router.delete('/:userID/class-user/:classID', async (req, res, next) => {
     const result = await userService.deleteClassOfUser(userID, classID);
     res.json(result);
 });
-
-
-
 
 module.exports = router;
 
@@ -146,7 +143,7 @@ module.exports = router;
 // urlAPI/users/:id     -> delete user by id (DELETE) - dataUser
 
 // urlAPI/users/:id/class-user?role=teacher/student                     -> list class of user (GET)
-//                                                                          query 'role' to get user's joined/created class 
+//                                                                          query 'role' to get user's joined/created class
 
 // urlAPI/users/:userID/class-user/                                     -> (POST)   add user to exists class (need class code - student) / create new class (teacher)
 // urlAPI/users/:userID/class-user/                                     -> (PUT)    edit class that user created (role: only teacher)

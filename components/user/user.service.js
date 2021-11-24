@@ -5,7 +5,6 @@ const classService = require('../classroom/class.service')
 module.exports = {
     async getAllUsers() {
         return await userModel.getAllUsers();
-
     },
 
     async getUserByID(userID) {
@@ -29,13 +28,24 @@ module.exports = {
         };
         // console.log(user);
         await userModel.addUser(user);
+        delete user.Password;
+        let returnJson = {
+            msg: 'success',
+            error: '',
+            user
+        }
+        return returnJson;
     },
 
     async updateUserByID(userID, data) {
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        }
 
         let currentUser = await this.getUserByID(userID);
         if (currentUser.length === 0)
-            return false;
+            return returnJson;
 
         let updatingUser = {
             FullName: (data.fullName && data.fullName.length !== 0) ? data.fullName : currentUser[0].FullName,
@@ -49,11 +59,23 @@ module.exports = {
             updatingUser.Password = handleNewPassword;
         }
         // console.log(currentUser, updatingUser);
-        return await userModel.updateUserByID(userID, updatingUser);
+        if (await userModel.updateUserByID(userID, updatingUser)) {
+            returnJson.error = '';
+            returnJson.msg = 'success';
+        }
+        return returnJson;
     },
 
     async deleteUserByID(userID) {
-        return await userModel.deleteUserByID(userID);
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        }
+        if (await userModel.deleteUserByID(userID)) {
+            returnJson.error = '';
+            returnJson.msg = 'success';
+        }
+        return returnJson;
     },
 
     async getClassesOfUserByUserID(userID) {
@@ -70,34 +92,38 @@ module.exports = {
 
     async getClassDetailByUserIDandClassID(userID, classID) {
         // handle exception
-        let rs = {};
-
+        
         // information for home page of class details
         const classInfo = await userModel.getClassDetailByUserIDandClassID(userID, classID);
 
         // note: lesson/exercise, people, grade
 
-        rs.classInfo = classInfo[0];
-        return rs;
-
+        return classInfo;
     },
 
     async addUserToClass(userID, rawData) {
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!',
+        }
         // console.log(rawData, userID);
         // check class is exists?
         const classInput = await classService.getClassByCode(rawData.classCode);
         // console.log(classInput);
 
         if (classInput.length === 0) {
-            return { error: "Class is not exists!" };
+            returnJson.error = "Class is not exists!";
+            return returnJson;
         }
+
         // check whether user is in class with this coresponding role??
         const classesOfUser = await userModel.getClassesOfUserByUserID(userID);
         for (let i in classesOfUser) {
-            if (classesOfUser[i].Code === rawData.classCode)
-                return { error: "User joined this class" };
+            if (classesOfUser[i].Code === rawData.classCode) {
+                returnJson.error = "User joined this class!";
+                return returnJson;
+            }
         }
-
 
         const handleData = {
             UserID: userID,
@@ -106,23 +132,37 @@ module.exports = {
         }
         // console.log(handleData)
 
-        return await userModel.addUserToClass(handleData);
+        if (await userModel.addUserToClass(handleData)) {
+            returnJson.msg = 'success';
+            returnJson.error = '';
+        }
+        return returnJson;
     },
 
     async createClassForUser(userID, rawData) {
-        // create class
+        let returnJson = {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        }
         // console.log(rawData);
-        const classID = await classService.createClass(rawData);
+
+        // create class
+        rawData.userID = userID;
+        const response = await classService.createClass(rawData);
 
         const handleClassUserData = {
             UserID: userID,
-            ClassID: classID,
+            ClassID: response.classID,
             Role: rawData.role
         }
         console.log(handleClassUserData)
+
         // add to class_user and return
-        // return null;
-        return await userModel.addUserToClass(handleClassUserData);
+        if (await userModel.addUserToClass(handleClassUserData)) {
+            returnJson.msg = 'success';
+            returnJson.error = '';
+        }
+        return returnJson;
     },
 
     async updateInfoClassOfUser(userID, classID, rawData) {
@@ -142,18 +182,18 @@ module.exports = {
         let returnJson = { msg: "failure", error: "You don't have permission!" };
 
         // get user's role in class 
-        const classInfo = await (await this.getClassDetailByUserIDandClassID(userID, classID)).classInfo;
+        const classInfo = await (await this.getClassDetailByUserIDandClassID(userID, classID));
         console.log(classInfo);
 
 
         // remove user from their joined class, if they are student in class
-        if (classInfo && classInfo.Role === 'student') {
+        if (classInfo && classInfo.length !== 0 && classInfo[0].Role === 'student') {
             const rs = await userModel.removeUserFromJoinedClass(userID, classID);
             if (rs) {
                 returnJson.msg = "success";
                 returnJson.error = ""
             }
-            else{
+            else {
                 returnJson.msg = "failure";
                 returnJson.error = "Something was wrong!"
             }
