@@ -14,6 +14,7 @@ const sendMailRoute = require('./components/sendmail/sendmail.controller');
 const rTokenRouter = require('./module/auth.route');
 const passport = require('./module/passport/index');
 const joinclassRouter = require('./components/joinClass/joinClass.controller')
+const gradeStructRouter = require('./components/gradeStruct/gradeStruct.controller');
 const app = express();
 app.use(passport.initialize());
 // view engine setup
@@ -30,7 +31,7 @@ app.use('/', indexRouter);
 //app.use('/users', passport.authenticate('jwt', {session:false}), usersRouter);
 app.use('/users', usersRouter);
 
-
+app.use('/grade-struct', gradeStructRouter);
 app.use('/classes', classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
