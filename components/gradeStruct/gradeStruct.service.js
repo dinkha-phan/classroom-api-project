@@ -1,18 +1,26 @@
 const gradeStructModel = require("./gradeStruct.model");
 
 module.exports = {
-    async getGradeStruct(id){
+    async getGradeStruct(id) {
         let rows = await gradeStructModel.getGrade(id);
         return rows;
     },
-    async putGradeStruct(id, rank, data){
+    async putGradeStruct(id, rank, data) {
+        const data2 = {
+            ...data,
+            ClassID: id,
+            Rank: rank
+        }
+        console.log("data", data, data2);
         let rows = await gradeStructModel.getGradeByRank(id, rank);
-        let res= null;
-        if(rows.length ==0){
-            res = await gradeStructModel.createGrade(data);
+        console.log("row", rows);
+        let res = null;
+        if (rows.length === 0) {
+            res = await gradeStructModel.createGrade(data2);
         }
-        else{
-            res = await gradeStructModel.editGrade(data);
+        else {
+            res = await gradeStructModel.editGrade(id, rank, data);
         }
+        console.log("res", res);
     }
 }
