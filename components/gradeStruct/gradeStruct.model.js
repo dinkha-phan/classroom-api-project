@@ -17,5 +17,9 @@ module.exports = {
     async getGradeByRank(id, rank) {
         row = await db('gradestruct').where('ClassID', id).where('Rank', rank);
         return row;
+    },
+    async deleteGrade(id, rank) {
+        row = await db('gradestruct').where('ClassID', id).where('Rank', rank).del();
+        return row;
     }
 }

@@ -21,6 +21,12 @@ module.exports = {
         else {
             res = await gradeStructModel.editGrade(id, rank, data);
         }
-        console.log("res", res);
+        return res;
+    },
+    async deleteGradeStruct(id, rank) {
+
+        let rows = await gradeStructModel.deleteGrade(id, rank);
+       
+        return rows;
     }
 }
