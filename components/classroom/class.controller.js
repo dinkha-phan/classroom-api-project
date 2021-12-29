@@ -44,7 +44,11 @@ router.get('/:classID/class-user/', async (req, res, next) => {
     const classID = req.params.classID;
     const rs = await classService.getAllPeopleInClass(classID);
     res.json(rs);
-})
+});
+router.put('/:classID/student/:studentID/', async (req, res, next)=>{
+    const rs = await classService.addStudentToClassbyCSV(req.params.classID, req.params.studentID);
+    res.json(rs);
+});
 
 
 

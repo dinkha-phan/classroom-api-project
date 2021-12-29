@@ -95,5 +95,22 @@ module.exports = {
             error: 'Something was wrong!'
         };
     },
+    async addStudentToClassbyCSV(classID, StudenID) {
+        const data = {
+            ClassID: classID,
+            UserID: StudenID,
+            Role: 'student'
+        }
+        const check = await classModel.getSpecificStudentInClass(classID, StudenID);
+        var res = 'User aldready in class.'; 
+        if (check.length > 0) {
+            return res;
+        }
+        else{
+            await classModel.addStudentToClassbyCSV(data);
+            res = 'Success';
+            return res;
+        }
+    },
 
 }

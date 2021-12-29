@@ -52,5 +52,15 @@ module.exports = {
         // console.log(rs);
         return rs;
     },
+    async addStudentToClassbyCSV(data) {
+        const rs = await db('class_user').insert(data);
+        // console.log(rs);
+        return rs;
+    },
+    async getSpecificStudentInClass(classID, studenID) {
+        const rs = await db('class_user').where('ClassID', classID).where('UserID', studenID);
+        // console.log(rs);
+        return rs;
+    },
     
 }
