@@ -15,6 +15,7 @@ const rTokenRouter = require('./module/auth.route');
 const passport = require('./module/passport/index');
 const joinclassRouter = require('./components/joinClass/joinClass.controller')
 const gradeStructRouter = require('./components/gradeStruct/gradeStruct.controller');
+const gradeClassRouter = require('./components/gradeClass/gradeClass.controller');
 const app = express();
 app.use(passport.initialize());
 // view engine setup
@@ -32,6 +33,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 app.use('/grade-struct', gradeStructRouter);
+app.use('/gradeClass', gradeClassRouter);
 app.use('/classes', classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
