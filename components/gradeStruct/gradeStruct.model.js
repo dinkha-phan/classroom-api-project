@@ -11,7 +11,7 @@ module.exports = {
         return row;
     },
     async editGrade(id, rank, data) {
-        result = await db('gradestruct').where('ClassID', id).where('Rank', rank).update({ Name: data.Name, Grade: data.Grade });
+        result = await db('gradestruct').where('ClassID', id).where('Rank', rank).update({ Name: data.Name, Grade: data.Grade, IsShowed: data.IsShowed });
         return result;
     },
     async getGradeByRank(id, rank) {
