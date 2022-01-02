@@ -52,6 +52,16 @@ module.exports = {
         // console.log(rs);
         return rs;
     },
+    async getAllStudentInClass(classID) {
+        const rs = await db.select('*')
+        .from('class_user as cu')
+        .join('user as u', 'u.UserID', '=', 'cu.UserID')
+        .join('gradestruct as g', 'g.ClassID', '=', 'cu.ClassID')
+        .where('cu.ClassID', '=', classID)
+        .where('cu.Role', 'student');
+        // console.log(rs);
+        return rs;
+    },
     async addStudentToClassbyCSV(data) {
         const rs = await db('class_user').insert(data);
         // console.log(rs);

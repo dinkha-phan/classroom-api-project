@@ -26,7 +26,9 @@ module.exports = {
         return rs;
     },
     async getGradeOfClass(classID){
-        const rs = await db('user_grade').where('ClassID', classID);
+        const rs = await db('user_grade as ug').join('gradeStruct as gs', (queryBuilder) =>{
+            queryBuilder.on('ug.ClassID', 'gs.ClassID').andOn('ug.Rank', 'gs.Rank')
+        }).where('ug.ClassID', classID);
         return rs;
     },
     async getGradeOfStudentInClass(userID, classID){

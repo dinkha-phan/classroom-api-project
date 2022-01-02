@@ -95,6 +95,16 @@ module.exports = {
             error: 'Something was wrong!'
         };
     },
+    async getAllStudentInClass(classID) {
+        if (uuidValidate(classID)) {
+            console.log(classID);
+            return await classModel.getAllStudentInClass(classID);
+        }
+        return {
+            msg: 'failure',
+            error: 'Something was wrong!'
+        };
+    },
     async addStudentToClassbyCSV(classID, StudenID) {
         const data = {
             ClassID: classID,
