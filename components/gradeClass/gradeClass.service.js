@@ -1,11 +1,11 @@
 const gradeClassModel = require("./gradeClass.model");
 
 module.exports = {
-    async addOrEditGrade(classID, userID, rank, grade, tcCmt, stCmt, exGrade) {
+    async addOrEditGrade(classID, userID, rank, grade, tcCmt, stCmt, exGrade, status) {
         const check = await gradeClassModel.getGradeOneRankByStudent(userID, classID, rank);
         let re = 'Failed';
         if (check.length > 0) {
-            await gradeClassModel.editGradeInClass(userID, classID, rank, grade, tcCmt, stCmt, exGrade);
+            await gradeClassModel.editGradeInClass(userID, classID, rank, grade, tcCmt, stCmt, exGrade, status);
             re = 'Success';
         }
         else {
