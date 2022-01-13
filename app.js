@@ -16,6 +16,7 @@ const passport = require('./module/passport/index');
 const joinclassRouter = require('./components/joinClass/joinClass.controller')
 const gradeStructRouter = require('./components/gradeStruct/gradeStruct.controller');
 const gradeClassRouter = require('./components/gradeClass/gradeClass.controller');
+const notificationRouter = require('./components/notification/notification.controller');
 const app = express();
 app.use(passport.initialize());
 // view engine setup
@@ -40,7 +41,7 @@ app.use('/signup', signUpRouter);
 app.use('/join-class', joinclassRouter)
 app.use('/refresh', rTokenRouter);
 app.use('/invite', sendMailRoute);
-
+app.use('/noti', notificationRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));

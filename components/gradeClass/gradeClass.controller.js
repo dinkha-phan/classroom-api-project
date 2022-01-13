@@ -15,7 +15,7 @@ router.get('/class/:classID/user/:userID', async (req, res, next) => {
     const result = await gradeClassService.getGradeOfStudentInClass(req.params.classID, req.params.userID);
     res.json(result);
 });
-router.put('comment/user/:userID/class/:classID/rank/:rank', async (req, res, next) => {
+router.put('/comment/user/:userID/class/:classID/rank/:rank', async (req, res, next) => {
     const result = await gradeClassService.EditComment(req.params.classID, req.params.userID, req.params.rank, req.body.tcCmt, req.body.stCmt, req.body.exGrade, req.body.status);
     res.json(result);
 });
