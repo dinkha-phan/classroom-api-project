@@ -12,19 +12,17 @@ module.exports = {
         const rs = await db('user_grade').insert(data);
         return rs;
     },
-    async editGradeInClass(userID, classID, rank, grade, tcCmt, stCmt, exGrade, status) {
-        const data = {
-            UserID: userID,
-            ClassID: classID,
-            Rank: rank,
-            Grade: grade,
+    async editGradeInClass(userID, classID, rank, grade) {
+        const rs = await db('user_grade').where('ClassID', classID).where('UserID', userID).where('Rank', rank).update('Grade', grade);
+        return rs;
+    },
+    async editCommentOnGrade(userID, classID, rank, tcCmt, stCmt, exGrade, status) {
+        const rs = await db('user_grade').where('ClassID', classID).where('UserID', userID).where('Rank', rank).update({
             CommentST: stCmt,
             CommentTC: tcCmt,
             ExpectGrade: exGrade,
             Status: status
-
-        }
-        const rs = await db('user_grade').where('ClassID', classID).where('UserID', userID).where('Rank', rank).update('Grade', grade);
+        });
         return rs;
     },
     async getGradeOneRankByStudent(userID, classID, rank) {
