@@ -11,12 +11,16 @@ module.exports = {
         const rs = await db('user_grade').insert(data);
         return rs;
     },
-    async editGradeInClass(userID, classID, rank, grade) {
+    async editGradeInClass(userID, classID, rank, grade, tcCmt, stCmt, exGrade) {
         const data = {
             UserID: userID,
             ClassID: classID,
             Rank: rank,
-            Grade: grade
+            Grade: grade,
+            CommentST: stCmt,
+            CommentTC: tcCmt,
+            ExpectGrade: exGrade
+
         }
         const rs = await db('user_grade').where('ClassID', classID).where('UserID', userID).where('Rank', rank).update('Grade', grade);
         return rs;
