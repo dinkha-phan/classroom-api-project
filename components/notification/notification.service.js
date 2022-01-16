@@ -2,7 +2,7 @@ const notificationModel = require("./notification.model");
 
 module.exports = {
     async addNoti(userID, content, link) {
-        const rs = await notificationModel.addNoti(userID, notiId, content, link);
+        const rs = await notificationModel.addNoti(userID, content, link);
         return rs;
     },
     async editNoti(notiId) {
