@@ -1,7 +1,7 @@
 const db = require('../../utils/db');
 module.exports = {
     async findUserByMail(usn) {
-        let row = await db('user').where('Email', usn);
+        let row = await db('user').where('Email', usn).where('Baned', 0);
         if (row.length === 0)
             return null;
         return row;

@@ -10,15 +10,9 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client("241758761089-mhhbbvca0eh6nh60sko4td8tp0iqe6r7.apps.googleusercontent.com");
 route.post('/', passport.authenticate('local', { session: false }), async function (req, res, next) {
     console.log(req.user);
-    let _rToken = uuidv4();
     let day = new Date();
     day.setTime(day.getTime() + 60480000)
-    const token = {
-        Email: req.user.email,
-        Token: _rToken,
-        ExpiredDate: day,
-    }
-    await refreshToken.addToken(token);
+
     const user = await userModel.getUserByEmail(req.user.email);
     console.log(user);
     res.json({
@@ -28,9 +22,8 @@ route.post('/', passport.authenticate('local', { session: false }), async functi
             fullName: user.length !== 0 ? user[0].FullName : '',
             spec: uuidv4(),
         }, process.env.JWT_SECRET, {
-            expiresIn: '5m'
+            expiresIn: '30m'
         }),
-        refreshToken: _rToken,
     })
 })
 route.post('/google', async function (req, res, next) {
@@ -78,7 +71,6 @@ route.post('/google', async function (req, res, next) {
                     ExpiredDate: day,
                 }
                 await refreshToken.addToken(token);
-                console.log("456");
                 res.json({
                     token: jwt.sign({
                         email: email,

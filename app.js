@@ -33,15 +33,15 @@ app.use('/', indexRouter);
 //app.use('/users', passport.authenticate('jwt', {session:false}), usersRouter);
 app.use('/users', usersRouter);
 
-app.use('/grade-struct', gradeStructRouter);
-app.use('/gradeClass', gradeClassRouter);
-app.use('/classes', classRouter);
+app.use('/grade-struct', passport.authenticate('jwt', {session: false}) ,gradeStructRouter);
+app.use('/gradeClass', passport.authenticate('jwt', {session: false}), gradeClassRouter);
+app.use('/classes', passport.authenticate('jwt', {session: false}), classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
-app.use('/join-class', joinclassRouter)
+app.use('/join-class', passport.authenticate('jwt', {session: false}), joinclassRouter)
 app.use('/refresh', rTokenRouter);
-app.use('/invite', sendMailRoute);
-app.use('/noti', notificationRouter)
+app.use('/invite', passport.authenticate('jwt', {session: false}), sendMailRoute);
+app.use('/noti', passport.authenticate('jwt', {session: false}), notificationRouter)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
