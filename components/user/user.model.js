@@ -18,7 +18,7 @@ module.exports = {
     },
 
     async getUserByID(userID) {
-        const row = await db.select('*').from('user').where({ 'UserID': userID });
+        const row = await db.select('*').from('user').where( 'UserID', userID);
         // console.log(row);
         return row;
     },

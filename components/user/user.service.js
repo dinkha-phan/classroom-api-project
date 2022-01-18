@@ -42,22 +42,25 @@ module.exports = {
             msg: 'failure',
             error: 'Something was wrong!'
         }
-
+        if(data.userID != userID){
+            let user = await userModel.getUserByID(data.userID);
+            if(user.length >0){
+                returnJson = {
+                    msg: 'ID existed',
+                    error: ''
+                }
+                return 'ID existed';
+            }
+        }
         let currentUser = await this.getUserByID(userID);
         if (currentUser.length === 0)
             return returnJson;
 
         let updatingUser = {
-            FullName: (data.fullName && data.fullName.length !== 0) ? data.fullName : currentUser[0].FullName,
-            DateOfBirth: data.dateOfBirth || currentUser[0].DateOfBirth,
-            AvartarURL: data.avartarURL || currentUser[0].AvartarURL,
+            UserID: data.userID,
+            FullName: (data.fullName && data.fullName.length !== 0) ? data.fullName : currentUser[0].FullName
         };
 
-        let handleNewPassword;
-        if (data.newPassword) {
-            handleNewPassword = bcrypt.hashSync(data.newPassword, 10);
-            updatingUser.Password = handleNewPassword;
-        }
         // console.log(currentUser, updatingUser);
         if (await userModel.updateUserByID(userID, updatingUser)) {
             returnJson.error = '';
