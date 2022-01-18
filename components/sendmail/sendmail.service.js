@@ -6,7 +6,7 @@ var transporter = nodemailer.createTransport({
     secure: false,
     auth: {
         user: 'ntd.ppnckh.01@gmail.com',			//email ID
-        pass: 'Tdat01217181090'				//Password 
+        pass: 'TIENdat01217181090'				//Password 
         }
 });
 module.exports ={

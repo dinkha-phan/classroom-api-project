@@ -20,11 +20,13 @@ router.post('/invitations/', async (req, res, next) => {
 })
 
 
-router.post('/confirm/:classID/', async (req, res, next) => {
+router.get('/confirm/:classID/user/:userID', async (req, res, next) => {
     const classID = req.params.classID;
-    const email = req.body.email;
-    const rs = await joinClassService.addStudentIntoClass(email, classID);
-    res.json(rs);
+    const rs = await joinClassService.addStudentIntoClass(req.params.userID, classID);
+    
+    //window.location.href = 'http://localhost:3001'
+    
+    res.redirect(301, 'http://localhost:3001/');
 })
 
 module.exports = router;

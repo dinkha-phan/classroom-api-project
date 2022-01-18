@@ -3,15 +3,16 @@ const userModel = require('../user/user.model')
 const joinClassModel = require('./joinClass.model')
 const nodemailer = require('nodemailer');
 const { getMailContent } = require('./mailContent');
-
+const URLAPI = 'http://localhost:3000'
+const URLUI = 'http://localhost:3001'
 module.exports = {
-    async addStudentIntoClass(email, classID) {
+    async addStudentIntoClass(userID, classID) {
         let returnJson = {
             msg: 'failure',
             error: 'Something was wrong!',
         }
 
-        console.log(classID, email);
+        console.log(classID, userID);
 
         // check class is exists
         const classInfo = await classService.getClassByID(classID);
@@ -22,13 +23,12 @@ module.exports = {
         }
 
         // check user is not exists
-        const userData = await userModel.getUserByEmail(email);
+        const userData = await userModel.getUserByID(userID);
         // console.log(userData);
         if (!userData || userData.length === 0) {
             returnJson.error = "User is not exists!";
             return returnJson;
         }
-        const userID = userData[0].UserID;
 
 
         // check user join class
@@ -40,7 +40,7 @@ module.exports = {
                 return returnJson;
             }
         }
-
+        let email = userData[0].Email;
         // check invatation is exists
         const invitationRecord = await joinClassModel.getInvatationByEmailandClassID(email, classID);
         // console.log(invitationRecord)
@@ -61,7 +61,6 @@ module.exports = {
             returnJson.msg = 'success';
             returnJson.error = '';
         }
-
         await joinClassModel.deleteInvitation(email, classID)
 
         return returnJson;
@@ -118,7 +117,7 @@ module.exports = {
         }
         
         // send mail 
-        sendmail(classInfo[0].LinkToJoinClass, email);
+        sendmail(URLAPI+classInfo[0].LinkToJoinClass + '/user/' + userData[0].UserID, email);
 
         // add invitation
         const handleData = {
@@ -145,7 +144,7 @@ function sendmail(link, email) {
         secure: false,
         auth: {
             user: 'ntd.ppnckh.01@gmail.com',			//email ID
-            pass: 'Tdat01217181090'				//Password 
+            pass: 'TIENdat01217181090'				//Password 
         }
     });
 

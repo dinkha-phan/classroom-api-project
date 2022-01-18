@@ -31,14 +31,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 //app.use('/users', passport.authenticate('jwt', {session:false}), usersRouter);
-app.use('/users', usersRouter);
+app.use('/users', passport.authenticate('jwt', {session: false}), usersRouter);
 
 app.use('/grade-struct', passport.authenticate('jwt', {session: false}) ,gradeStructRouter);
 app.use('/gradeClass', passport.authenticate('jwt', {session: false}), gradeClassRouter);
 app.use('/classes', passport.authenticate('jwt', {session: false}), classRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signUpRouter);
-app.use('/join-class', passport.authenticate('jwt', {session: false}), joinclassRouter)
+app.use('/join-class', joinclassRouter)
 app.use('/refresh', rTokenRouter);
 app.use('/invite', passport.authenticate('jwt', {session: false}), sendMailRoute);
 app.use('/noti', passport.authenticate('jwt', {session: false}), notificationRouter)

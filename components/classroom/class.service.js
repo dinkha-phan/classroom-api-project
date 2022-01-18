@@ -37,7 +37,7 @@ module.exports = {
             Auther: data.userID,
         }
         classData.ClassID = uuidv4();
-        classData.LinkToJoinClass = process.env.URL_LOCAL_API + '/join-class/confirm/' + classData.ClassID;
+        classData.LinkToJoinClass = '/join-class/confirm/' + classData.ClassID;
         classData.Code = uuidv4();
 
         console.log(classData)
