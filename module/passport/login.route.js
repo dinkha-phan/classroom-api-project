@@ -27,63 +27,40 @@ route.post('/', passport.authenticate('local', { session: false }), async functi
     })
 })
 route.post('/google', async function (req, res, next) {
-    const tokenId = req.body.tokenId;
-    client.verifyIdToken({ idToken: tokenId, audience: "241758761089-mhhbbvca0eh6nh60sko4td8tp0iqe6r7.apps.googleusercontent.com" }).then(async (response) => {
-        const { email_verified, name, email } = response.payload;
-        console.log(response.payload);
-        if (email_verified) {
-            const row = await userModel.findUserByMail(email);
-            if (row == null) {
-                var newUser = {
-                    UserID: uuidv4(),
-                    Email: email,
-                    FullName: name,
-                };
-                await userModel.addUser(newUser);
-                let _rToken = uuidv4();
-                let day = new Date();
-                day.setTime(day.getTime() + 60480000)
-                const token = {
-                    Email: email,
-                    Token: _rToken,
-                    ExpiredDate: day,
-                }
-                await refreshToken.addToken(token);
-                console.log("123");
-                res.json({
-                    token: jwt.sign({
-                        email: email,
-                        id: newUser.UserID,
-                        spec: uuidv4(),
-                    }, process.env.JWT_SECRET, {
-                        expiresIn: '5m'
-                    }),
-                    refreshToken: _rToken,
-                })
-            }
-            else {
-                let _rToken = uuidv4();
-                let day = new Date();
-                day.setTime(day.getTime() + 60480000)
-                const token = {
-                    Email: email,
-                    Token: _rToken,
-                    ExpiredDate: day,
-                }
-                await refreshToken.addToken(token);
-                res.json({
-                    token: jwt.sign({
-                        email: email,
-                        id: row[0].UserID,
-                        spec: uuidv4(),
-                    }, process.env.JWT_SECRET, {
-                        expiresIn: '5m'
-                    }),
-                    refreshToken: _rToken,
-                })
-            }
-        }
+    const data = req.body.data;
+    const row = await userModel.findUserByMail(data.email);
+    let userID = uuidv4();
+    if (row == null) {
+        var newUser = {
+            UserID: userID,
+            Email: data.email,
+            FullName: data.name,
+            AvatarURL: data.imageUrl
+        };
+        await userModel.addUser(newUser);
+        res.json({
+            token: jwt.sign({
+                email: data.email,
+                id: userID,
+                spec: uuidv4(),
+            }, process.env.JWT_SECRET, {
+                expiresIn: '30m'
+            })
+        })
+    }
+    else{
+        res.json({
+            token: jwt.sign({
+                email: data.email,
+                id: row[0].UserID,
+                spec: uuidv4(),
+            }, process.env.JWT_SECRET, {
+                expiresIn: '30m'
+            })
+        })
+    }
+    
 
-    })
+    
 })
 module.exports = route;
