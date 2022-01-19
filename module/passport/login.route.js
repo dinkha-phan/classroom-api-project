@@ -35,7 +35,7 @@ route.post('/google', async function (req, res, next) {
             UserID: userID,
             Email: data.email,
             FullName: data.name,
-            AvatarURL: data.imageUrl
+            AvartarURL: data.imageUrl
         };
         await userModel.addUser(newUser);
         res.json({
@@ -48,7 +48,7 @@ route.post('/google', async function (req, res, next) {
             })
         })
     }
-    else{
+    else {
         res.json({
             token: jwt.sign({
                 email: data.email,
@@ -59,8 +59,8 @@ route.post('/google', async function (req, res, next) {
             })
         })
     }
-    
 
-    
+
+
 })
 module.exports = route;
