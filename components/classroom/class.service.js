@@ -29,12 +29,21 @@ module.exports = {
     async createClass(data) {
         // genrate ID, link to join class, code
         // validation
+        const d = new Date();
+        const YY = d.getFullYear();
+        const MM = d.getMonth();
+        const DD = d.getDate();
+        const hh = d.getHours();
+        const mm = d.getMinutes();
+        const ss = d.getSeconds();
+        const time = `${YY}-${MM + 1}-${DD} ${hh}:${mm}:${ss}`;
         let classData = {
             Name: data.name,
             Part: data.part,
             Title: data.title,
             Room: data.room,
             Auther: data.userID,
+            CreatedAt: time,
         }
         classData.ClassID = uuidv4();
         classData.LinkToJoinClass = '/join-class/confirm/' + classData.ClassID;
@@ -112,11 +121,11 @@ module.exports = {
             Role: 'student'
         }
         const check = await classModel.getSpecificStudentInClass(classID, StudenID);
-        var res = 'User aldready in class.'; 
+        var res = 'User aldready in class.';
         if (check.length > 0) {
             return res;
         }
-        else{
+        else {
             await classModel.addStudentToClassbyCSV(data);
             res = 'Success';
             return res;

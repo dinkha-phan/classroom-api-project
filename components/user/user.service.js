@@ -18,6 +18,14 @@ module.exports = {
     async createUser(data) {
         const handlePassword = bcrypt.hashSync(data.password, 10);
         // check valiation of dateOfBirth, email, fullName in UI
+        const d = new Date();
+        const YY = d.getFullYear();
+        const MM = d.getMonth();
+        const DD = d.getDate();
+        const hh = d.getHours();
+        const mm = d.getMinutes();
+        const ss = d.getSeconds();
+        const time = `${YY}-${MM + 1}-${DD} ${hh}:${mm}:${ss}`;
         let user = {
             UserID: data.id,
             Password: handlePassword,
@@ -25,6 +33,7 @@ module.exports = {
             FullName: data.fullName,
             DateOfBirth: (data.dateOfBirth && data.dateOfBirth.length !== 0) ? data.dateOfBirth : null,
             AvartarURL: data.avartarURL,
+            CreatedAt: time,
         };
         // console.log(user);
         await userModel.addUser(user);
@@ -42,9 +51,9 @@ module.exports = {
             msg: 'failure',
             error: 'Something was wrong!'
         }
-        if(data.userID != userID){
+        if (data.userID != userID) {
             let user = await userModel.getUserByID(data.userID);
-            if(user.length >0){
+            if (user.length > 0) {
                 returnJson = {
                     msg: 'ID existed',
                     error: ''
@@ -95,7 +104,7 @@ module.exports = {
 
     async getClassDetailByUserIDandClassID(userID, classID) {
         // handle exception
-        
+
         // information for home page of class details
         const classInfo = await userModel.getClassDetailByUserIDandClassID(userID, classID);
 
@@ -147,7 +156,7 @@ module.exports = {
             msg: 'failure',
             error: 'Something was wrong!'
         }
-        // console.log(rawData);
+        console.log(rawData);
 
         // create class
         rawData.userID = userID;
