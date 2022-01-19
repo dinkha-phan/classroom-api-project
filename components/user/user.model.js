@@ -18,13 +18,13 @@ module.exports = {
     },
 
     async getUserByID(userID) {
-        const row = await db.select('*').from('user').where( 'UserID', userID);
+        const row = await db.select('*').from('user').where( 'UserID', userID).where('Baned', 0);
         // console.log(row);
         return row;
     },
 
     async getUserByEmail(email) {
-        const row = await db.select('*').from('user').where({ 'Email': email });
+        const row = await db.select('*').from('user').where({ 'Email': email }).where('Baned', 0);
         // console.log(row);
         return row;
     },
